@@ -22,7 +22,7 @@ const roomSchema=new mongoose.Schema({
         default:false
     }
 
-});
+},{timestamps:true});
 
 const Room=mongoose.model("Room",roomSchema);
 
