@@ -13,7 +13,7 @@ export const addReview=async(req,res,next)=>{
                 const hotel=await Hotel.findById(req.params.hotelid).populate({
                     path:"review",populate:{path:"user"}
                   }).populate("rooms");
-                  res.status(200).json({hotel});
+                  res.status(200).json({hotel,updatedHotel,newReview});
             }).catch((error)=>{
                 next(error);
             })
