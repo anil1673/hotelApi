@@ -12,11 +12,11 @@ export const register=async(req,res,next)=>{
     try{
         
             const hashPass=await bcrypt.hash(req.body.password,10);
-        const {ownername,email,password,isOwner}=req.body;
+        const {ownername,email,password}=req.body;
         
         const isEmailUnique=await Owner.findOne({email});
         if(!isEmailUnique){
-            const newOwner=new Owner({ownername,email,isOwner,password:hashPass});
+            const newOwner=new Owner({ownername,email,password:hashPass});
             await newOwner.save().then((owner)=>{
                 res.status(200).json({
                     owner:owner

@@ -9,11 +9,11 @@ import { transporter } from "../email/emailConfig.js";
 export const register=async(req,res,next)=>{
     try{
         const hashPass=await bcrypt.hash(req.body.password,10);
-        const {username,email,password,isOwner}=req.body;
+        const {username,email,password}=req.body;
         
         const isEmailUnique=await User.findOne({email});
         if(!isEmailUnique){
-            const newUser=new User({username,email,isOwner,password:hashPass});
+            const newUser=new User({username,email,password:hashPass});
             await newUser.save().then((user)=>{
                 res.status(200).json({
                     user:user
