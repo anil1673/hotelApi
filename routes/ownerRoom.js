@@ -8,7 +8,7 @@ const ownerRoomRouter=express.Router();
 ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
 
 // update room
-ownerRoomRouter.put("/updateroom/:ownerid/:roomid",verifyOwner,updateRoom);
+ownerRoomRouter.put("/updateroom/:ownerid/:hotelid/:roomid",verifyOwner,updateRoom);
 
 // delete room
 ownerRoomRouter.delete("/deleteroom/:ownerid/:hotelid/:roomid",verifyOwner,deleteRoom);

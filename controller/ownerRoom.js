@@ -9,7 +9,16 @@ export const createRoom=async(req,res,next)=>{
         }else{
             const newRoom=new Room(req.body);
         await newRoom.save().then(async(room)=>{
-            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then((hotel)=>{
+            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(updatedHotel)=>{
+
+
+                // fetch hotel complete detail
+                const hotel=await Hotel.findById(req.params.hotelid).populate({
+                    path:"review",populate:{path:"user"}
+                  }).populate("rooms");
+                  res.status(200).json({updatedHotel,hotel,newRoom});
+
+
                 res.status(200).json(hotel)
             }).catch((error)=>{
                 next(error)
@@ -26,8 +35,13 @@ export const createRoom=async(req,res,next)=>{
 // update room
 export const updateRoom=async(req,res,next)=>{
     try{
-        await Room.findByIdAndUpdate(req.params.roomid,{$set:req.body},{new:true}).then((room)=>{
-            res.status(200).json(room);
+        await Room.findByIdAndUpdate(req.params.roomid,{$set:req.body},{new:true}).then(async(updatedRoom)=>{
+            // fetch hotel complete detail
+            const hotel=await Hotel.findById(req.params.hotelid).populate({
+                path:"review",populate:{path:"user"}
+              }).populate("rooms");
+              res.status(200).json({hotel,updatedRoom});
+
         }).catch((error)=>{
             next(error)
         })
@@ -41,7 +55,12 @@ export const updateRoom=async(req,res,next)=>{
 export const deleteRoom=async(req,res,next)=>{
     try{
         await Hotel.findByIdAndUpdate(req.params.hotelid,{$pull:{rooms:req.params.roomid}},{new:true}).then(async()=>{
-            await Room.findByIdAndDelete(req.params.roomid).then(()=>{
+            await Room.findByIdAndDelete(req.params.roomid).then(async()=>{
+            // fetch hotel complete detail
+            const hotel=await Hotel.findById(req.params.hotelid).populate({
+                path:"review",populate:{path:"user"}
+              }).populate("rooms");
+              res.status(200).json({hotel});
                 res.status(200).json("room deleted successfully....")
             }).catch((error)=>{
                 next(error)

@@ -98,10 +98,12 @@ export const getAllHotel=async(req,res,next)=>{
 
 //  get single hotel
 export const getSingleHotel=async(req,res,next)=>{
-    const hotel=await Hotel.findById(req.params.hotelid).populate("rooms").populate("review")
+    const hotel=await Hotel.findById(req.params.hotelid).populate({
+      path:"review",populate:{path:"user"}
+    }).populate("rooms");
 
-    const commenters = await Review.findOne({ hotel: req.params.hotelid }).populate('user');
+    
    
-    res.status(200).json({hotel,commenters});
+    res.status(200).json({hotel});
 }
 
