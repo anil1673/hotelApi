@@ -7,27 +7,25 @@ import Room from "../models/room.js";
 // create Hotel
 export const createHotel=async(req,res,next)=>{
     try{
-      // console.log(req.files)
-      // for (const file of req.files) {
-      //   // Upload each file to Cloudinary
-      //   const result = await cloudinary.uploader.upload(file.path, {
-      //     folder: 'uploads', // Optional folder for organizing uploaded images
-      //     format: 'jpg', // Optional, specify the desired format
-      //     // Additional upload parameters if needed
-      //   });
-  
-      //   // Access the Cloudinary URL and other details
-      //   console.log(result.secure_url);
-  
-      //   // Perform further processing or save the URL to a database
-      // }
+      console.log(req.files)
+      const files = req.files;
+
+      const uploadedImages = files.map((file) => {
+        return file.path;
+      });
+
+      const newHotel = new Hotel({
+        ...req.body,
+         photos: uploadedImages
+       });
+      
         
       //  const newHotel=new Hotel({...req.body,photos:result.secure_url});
-      //  const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
-      //  const saveHotel=await newHotel.save().then(async(hotel)=>{
-      //   const allHotel=await Hotel.find();
-      //   res.status(200).json({newHotel:hotel,allHotel:allHotel});
-      //  });
+       const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
+       const saveHotel=await newHotel.save().then(async(hotel)=>{
+        const allHotel=await Hotel.find();
+        res.status(200).json({newHotel:hotel,allHotel:allHotel});
+       });
         res.status(200).json("saveHotel");
 
     }catch(error){
