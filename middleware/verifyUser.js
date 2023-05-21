@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const verifyUser=async(req,res,next)=>{
     try{
-        const token=req.headers.authorization?.split(" ")[1];
+        const token=req.headers.authorization.split(" ")[1];
         if(token){
             // token available
             jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
@@ -14,7 +14,8 @@ export const verifyUser=async(req,res,next)=>{
                     })
 
                 }else{
-                    if(req.params.id === user._id){
+                    
+                    if(req.params.userid === user._id){
                         // everything alright
                         req.user=user;
                         next();

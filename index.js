@@ -5,7 +5,11 @@ import dotenv from "dotenv";
 dotenv.config({path:"./config.env"});
 import mongoose from "mongoose";
 import "./db/conn.js"
-import authRouter from "./routes/auth.js";
+import userAuthRouter from "./routes/userAuth.js";
+import ownerAuthRouter from "./routes/ownerAuth.js";
+import hotelRouter from "./routes/hotel.js";
+import ownerRoomRouter from "./routes/ownerRoom.js";
+import userRouter from "./routes/user.js";
 
 
 
@@ -19,7 +23,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // routes set
-app.use("/auth",authRouter);
+app.use("/userauth",userAuthRouter);
+app.use("/ownerauth",ownerAuthRouter);
+app.use("/hotel",hotelRouter);
+app.use("/ownerroom",ownerRoomRouter);
+app.use("/user",userRouter);
 
 
 

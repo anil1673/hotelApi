@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-const UserSchema=new mongoose.Schema({
-    username:{
+const OwnerSchema=new mongoose.Schema({
+    ownername:{
         type:String,
         requried:true,
     },
@@ -29,9 +29,9 @@ const UserSchema=new mongoose.Schema({
       },
     isOwner:{
         type:Boolean,
-        default:false,
+        default:true,
     },
-    review:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
+    hotel:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Hotel' }]
 
 },{
     timestamps:true
@@ -40,6 +40,6 @@ const UserSchema=new mongoose.Schema({
 
 // model
 
-const User=mongoose.model("User",UserSchema);
+const Owner=mongoose.model("Owner",OwnerSchema);
 
-export default User;
+export default Owner;

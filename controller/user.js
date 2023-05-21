@@ -1,8 +1,40 @@
-// register user
-const register=async(req,res,next)=>{
+import Hotel from "../models/hotel.js";
+import Review from "../models/review.js";
+import Room from "../models/room.js";
+
+
+// add review
+export const addReview=async(req,res,next)=>{
     try{
         
-    }catch(err){
+        const newReview=new Review({...req.body,user:req.user._id});
+        await newReview.save().then(async(review)=>{
+            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{review:review._id}},{new:true}).then((hotel)=>{
+                res.status(200).json(hotel);
+            }).catch((error)=>{
+                next(error);
+            })
+        }).catch(error=>{
+            next(error);
+        })
+    }catch(error){
+        next(error)
+    }
+}
 
+
+// get all review
+export const getAllReview=async(req,res,next)=>{
+    try{
+        const hotel=await Hotel.findById(req.params.hotelid).then(async(hotel)=>{
+            const reviewIds=hotel.review;
+            Review.find({_id:{$in:reviewIds}}).then(async(review)=>{
+                res.status(200).json({review:review});
+            }).catch((error)=>{
+                res.status(400).json({error:error})
+            })
+        })
+    }catch(error){
+        next(error);
     }
 }
