@@ -3,18 +3,20 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
 import { transporter } from "../email/emailConfig.js";
+import validator  from "validator";
 
 
 // register user
 
 export const register=async(req,res,next)=>{
     try{
-        const hashPass=await bcrypt.hash(req.body.password,10);
-        const {ownername,email,phone,password,isOwner}=req.body;
+        
+            const hashPass=await bcrypt.hash(req.body.password,10);
+        const {ownername,email,password,isOwner}=req.body;
         
         const isEmailUnique=await Owner.findOne({email});
         if(!isEmailUnique){
-            const newOwner=new Owner({ownername,email,phone,isOwner,password:hashPass});
+            const newOwner=new Owner({ownername,email,isOwner,password:hashPass});
             await newOwner.save().then((owner)=>{
                 res.status(200).json({
                     owner:owner
@@ -30,6 +32,7 @@ export const register=async(req,res,next)=>{
                 error:"email already available"
             })
         }
+          
     }catch(err){
         next(err)
     }

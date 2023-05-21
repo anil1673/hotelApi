@@ -13,11 +13,6 @@ const UserSchema=new mongoose.Schema({
         required:true,
         unique:true,
     },
-    phone:{
-        type:Number,
-        required:true,
-        unique:true,
-    },
     country: {
         type: String,
       },
