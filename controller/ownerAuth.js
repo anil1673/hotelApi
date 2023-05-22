@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import otpGenerator from "otp-generator";
 import { transporter } from "../email/emailConfig.js";
-import validator  from "validator";
 
 
 // register user
