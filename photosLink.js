@@ -19,5 +19,3 @@ cloudinary.config({
   
   // Create multer instance with the configured storage
   export const upload = multer({ storage: storage });
-
-  export default cloudinary.v2;
