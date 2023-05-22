@@ -11,11 +11,14 @@ export const createRoom=async(req,res,next)=>{
 
             const newRoom=new Room({...req.body,hotel:req.params.hotelid});
             await (await newRoom.save()).populate("owner").then(async(room)=>{
-            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(updatedHotel)=>{
+            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(h)=>{
             // fetch hotel complete detail
             const hotel=await Hotel.findById(req.params.hotelid).populate({
                 path:"review",populate:{path:"user"}
             }).populate("rooms");
+            const updatedHotel=await Hotel.findById(h._id).populate("owner").populate("rooms").populate({
+                path:"review",populate:{path:"user"}
+            }).populate("rooms");;
             res.status(200).json({updatedHotel,hotel,newRoom});
                 
             }).catch((error)=>{
