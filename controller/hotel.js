@@ -22,6 +22,7 @@ export const createHotel=async(req, res,next) => {
 
     // Save the hotel document to the database
     const savedHotel = await newHotel.save().then(async(hotel)=>{
+      await Owner.findByIdAndUpdate(req.params.ownerid,{$push:{hotel:hotel._id}});
       const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
       const currentHotel=await Hotel.findById(hotel._id).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
       res.status(200).json({allHotel,currentHotel});

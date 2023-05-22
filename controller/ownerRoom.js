@@ -19,7 +19,8 @@ export const createRoom=async(req,res,next)=>{
             const updatedHotel=await Hotel.findById(h._id).populate("owner").populate("rooms").populate({
                 path:"review",populate:{path:"user"}
             }).populate("rooms");
-            res.status(200).json({updatedHotel,hotel,newRoom});
+            const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
+            res.status(200).json({updatedHotel,hotel,allHotel,newRoom});
                 
             }).catch((error)=>{
                 next(error)
@@ -41,7 +42,8 @@ export const updateRoom=async(req,res,next)=>{
             const hotel=await Hotel.findById(req.params.hotelid).populate({
                 path:"review",populate:{path:"user"}
               }).populate("rooms");
-              res.status(200).json({hotel,updatedRoom});
+            const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")  
+              res.status(200).json({hotel,updatedRoom,allHotel});
 
         }).catch((error)=>{
             next(error)
@@ -61,7 +63,8 @@ export const deleteRoom=async(req,res,next)=>{
             const hotel=await Hotel.findById(req.params.hotelid).populate({
                 path:"review",populate:{path:"user"}
               }).populate("rooms");
-              res.status(200).json({hotel});
+            const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
+              res.status(200).json({hotel,allHotel});
             }).catch((error)=>{
                 next(error)
             })
@@ -78,8 +81,9 @@ export const getAllRoom=async(req,res,next)=>{
         const hotel=await Hotel.findById(req.params.hotelid).then(async(hotel)=>{
             const roomIds=hotel.rooms;
             Room.find({ _id: { $in: roomIds } })
-            .then(rooms => {
-            res.status(200).json(rooms)
+            .then(async (rooms) => {
+            const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
+            res.status(200).json({rooms,allHotel})
             })
             .catch(error => {
             next(error)
