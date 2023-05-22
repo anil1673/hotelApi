@@ -5,20 +5,19 @@ const HotelSchema =new mongoose.Schema({
         type:String,
         required:true,
     },
-    type:{
-        type:String,
-        required:true,
-    },
-    city:{
-        type:String,
-        required:true,
+    phone:{
+        type:Number,
     },
     address:{
         type:String,
         required:true,
     },
+    location:{
+        type:Number,
+        required:true,
+    },
     photos:[String],
-    
+
     description:{
         type:String,
         required:true,
@@ -29,15 +28,6 @@ const HotelSchema =new mongoose.Schema({
         max:5
     },
     rooms:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
-
-    cheapestPrice:{
-        type:Number,
-        required:true
-    },
-    features:{
-        type:Boolean,
-        default:false,
-    },
     review:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     owner:{ type: mongoose.Schema.Types.ObjectId, ref: 'Owner' }
     
