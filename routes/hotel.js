@@ -4,13 +4,13 @@ import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel } fr
 import verifyOwner from "../middleware/verifyOwner.js";
 // import { UploadStream } from "cloudinary";
  const hotelRouter=express.Router();
- import { upload } from "../multer.js";
+ import { upload } from "../photosLink.js";
 
 
 
 // create hotel
 // uploadImages is name attr of html 
-hotelRouter.post("/createhotel/:ownerid",verifyOwner,createHotel);
+hotelRouter.post("/createhotel/:ownerid",verifyOwner,upload.array('photos'),createHotel);
 
 // update hotel
 hotelRouter.put("/updatehotel/:ownerid/:hotelid",verifyOwner,updateHotel);

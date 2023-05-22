@@ -1,73 +1,55 @@
-import cloudinary from "../cloudinary.js";
+import cloudinary from "../photosLink.js";
 import Hotel from "../models/hotel.js";
 import Owner from "../models/owner.js";
 import Review from "../models/review.js";
 import Room from "../models/room.js";
 
 // create Hotel
-// export const createHotel=async(req, res,next) => {
-//   console.log(req.files)
-//   const images = req.files;
+export const createHotel=async(req, res,next) => {
+  try{
+    const photoPromises = req.files.map((file) =>
+      cloudinary.uploader.upload(file.path)
+    );
+    const photoResults = await Promise.all(photoPromises);
+    console.log(photoResults)
+    const photoUrls = photoResults.map((result) => result.secure_url);
+    
 
-//   const uploadedImages = [];
-//   let uploadCount = 0;
+    
 
-//   images.forEach((image) => {
-//     cloudinary.uploader.upload(image.path,async (error, result) => {
-//       if (error) {
-//         console.error('Error uploading image:', error);
-//       } else {
-//         uploadedImages.push({ filename: image.filename, url: result.url });
-//       }
+    // Create new hotel document
+    const newHotel = new Hotel({
+      ...req.body,
+      photos: photoUrls,
+      // Set other fields from the request body
+    });
 
-//       uploadCount++;
-//       if (uploadCount === images.length) {
-//         const newHotel = new Hotel({
-//           ...req.body,
-//           photos: uploadedImages
-//         });
+    // Save the hotel document to the database
+    const savedHotel = await newHotel.save();
 
-//         const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
-//         const saveHotel=await newHotel.save().then(async(hotel)=>{
-//         const allHotel=await Hotel.find();
-//         res.status(200).json({newHotel:hotel,allHotel:allHotel});
-//         });
-//  res.status(200).json("saveHotel");
-
-//        await newHotel.save((error, savedHotel) => {
-//           if (error) {
-//             console.error('Error saving hotel to MongoDB:', error);
-//             res.status(500).send('Error saving hotel');
-//           } else {
-//             res.json(savedHotel);
-//           }
-//         });
-//       }
-//     });
-//   });
-// };
+    res.status(200).json(savedHotel);
+  
+  }catch(error){
+    next(error);
+  }
+};
         
-    export const createHotel=async(req,res,next)=>{
-      try{
-        const newHotel=new Hotel(req.body);
-        const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
-        const saveHotel=await newHotel.save().then(async(hotel)=>{
-        const allHotel=await Hotel.find();
-        res.status(200).json({newHotel:hotel,allHotel:allHotel});
-        });
-      }catch(error){
-        next(error)
+    // export const createHotel=async(req,res,next)=>{
+    //   try{
+    //     const newHotel=new Hotel(req.body);
+    //     const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
+    //     const saveHotel=await newHotel.save().then(async(hotel)=>{
+    //     const allHotel=await Hotel.find();
+    //     res.status(200).json({newHotel:hotel,allHotel:allHotel});
+    //     });
+    //   }catch(error){
+    //     next(error)
 
-      }
-    }
+    //   }
+    // }
 
 
-// const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
-// const saveHotel=await newHotel.save().then(async(hotel)=>{
-//  const allHotel=await Hotel.find();
-//  res.status(200).json({newHotel:hotel,allHotel:allHotel});
-// });
-//  res.status(200).json("saveHotel");
+
 
 // update hotel
 export const updateHotel=async(req,res,next)=>{
