@@ -8,19 +8,14 @@ import Room from "../models/room.js";
 export const createHotel=async(req, res,next) => {
   try{
     const photoPromises = req.files.map((file) =>
-      cloudinary.uploader.upload(file.path)
+      file.path
     );
     const photoResults = await Promise.all(photoPromises);
-    console.log(photoResults)
-    const photoUrls = photoResults.map((result) => result.secure_url);
-    
-
-    
 
     // Create new hotel document
     const newHotel = new Hotel({
       ...req.body,
-      photos: photoUrls,
+      photos: photoResults,
       // Set other fields from the request body
     });
 

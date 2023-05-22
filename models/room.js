@@ -14,7 +14,8 @@ const roomSchema=new mongoose.Schema({
         required:true,
     },
     img:{
-        type:[String],
+        type:String,
+        required:true,
     },
     hotel:{ type: mongoose.Schema.Types.ObjectId, ref: 'Hotel' },
     status:{

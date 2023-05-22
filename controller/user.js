@@ -1,7 +1,23 @@
 import Hotel from "../models/hotel.js";
 import Review from "../models/review.js";
 import Room from "../models/room.js";
+import User from "../models/user.js";
 
+
+// UPDATE PROFILE PIC
+export const updateProfilepic=async(req,res,next)=>{
+    try{
+       console.log(req.file.path) ;
+       await User.findByIdAndUpdate(req.params.userid,{$set:{img:req.file.path}},{new:true}).then((user)=>{
+        console.log(user)
+            res.status(200).json({user:user});
+       }).catch((error)=>{
+        next(error);
+       })
+    }catch(error){
+        next(error)
+    }
+}
 
 // add review
 export const addReview=async(req,res,next)=>{
@@ -43,4 +59,5 @@ export const getAllReview=async(req,res,next)=>{
     }catch(error){
         next(error);
     }
-}
+};
+

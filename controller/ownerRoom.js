@@ -4,22 +4,20 @@ import Room from "../models/room.js";
 // create Room
 export const createRoom=async(req,res,next)=>{
     try{
+        console.log(req.body)
         if(req.body.number === "" || req.body.type==="" || req.body.price===""){
             res.status(200).json("number , type and price can't be empty");
         }else{
-            const newRoom=new Room(req.body);
-        await newRoom.save().then(async(room)=>{
+
+            const newRoom=new Room({...req.body,img:req.file.path,hotel:req.params.hotelid});
+            await newRoom.save().then(async(room)=>{
             await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(updatedHotel)=>{
-
-
-                // fetch hotel complete detail
-                const hotel=await Hotel.findById(req.params.hotelid).populate({
-                    path:"review",populate:{path:"user"}
-                  }).populate("rooms");
-                  res.status(200).json({updatedHotel,hotel,newRoom});
-
-
-                res.status(200).json(hotel)
+            // fetch hotel complete detail
+            const hotel=await Hotel.findById(req.params.hotelid).populate({
+                path:"review",populate:{path:"user"}
+            }).populate("rooms");
+            res.status(200).json({updatedHotel,hotel,newRoom});
+                
             }).catch((error)=>{
                 next(error)
             })
@@ -61,7 +59,6 @@ export const deleteRoom=async(req,res,next)=>{
                 path:"review",populate:{path:"user"}
               }).populate("rooms");
               res.status(200).json({hotel});
-                res.status(200).json("room deleted successfully....")
             }).catch((error)=>{
                 next(error)
             })
