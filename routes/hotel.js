@@ -10,7 +10,8 @@ import verifyOwner from "../middleware/verifyOwner.js";
 
 // create hotel
 // uploadImages is name attr of html 
-hotelRouter.post("/createhotel/:ownerid",verifyOwner,upload.array('photos'),createHotel);
+// hotelRouter.post("/createhotel/:ownerid",verifyOwner,upload.array('photos'),createHotel);
+hotelRouter.post("/createhotel/:ownerid",verifyOwner,createHotel);
 
 // update hotel
 hotelRouter.put("/updatehotel/:ownerid/:hotelid",verifyOwner,updateHotel);

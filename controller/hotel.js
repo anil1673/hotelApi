@@ -6,15 +6,15 @@ import Room from "../models/room.js";
 // create Hotel
 export const createHotel=async(req, res,next) => {
   try{
-    const photoPromises = req.files.map((file) =>
-      file.path
-    );
-    const photoResults = await Promise.all(photoPromises);
+    // const photoPromises = req.files.map((file) =>
+    //   file.path
+    // );
+    // const photoResults = await Promise.all(photoPromises);
 
     // Create new hotel document
     const newHotel = new Hotel({
       ...req.body,
-      photos: photoResults,
+      // photos: photoResults,
       // Set other fields from the request body
     });
 
