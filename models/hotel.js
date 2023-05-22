@@ -13,8 +13,7 @@ const HotelSchema =new mongoose.Schema({
         required:true,
     },
     location:{
-        type:Number,
-        required:true,
+        type:Number
     },
     photos:[String],
 
