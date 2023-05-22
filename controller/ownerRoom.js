@@ -18,7 +18,7 @@ export const createRoom=async(req,res,next)=>{
             }).populate("rooms");
             const updatedHotel=await Hotel.findById(h._id).populate("owner").populate("rooms").populate({
                 path:"review",populate:{path:"user"}
-            }).populate("rooms");;
+            }).populate("rooms");
             res.status(200).json({updatedHotel,hotel,newRoom});
                 
             }).catch((error)=>{
