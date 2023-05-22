@@ -9,18 +9,21 @@ export const createRoom=async(req,res,next)=>{
             res.status(200).json("number , type and price can't be empty");
         }else{
 
-            const newRoom=new Room({...req.body,hotel:req.params.hotelid});
-            await (await newRoom.save()).populate("owner").then(async(room)=>{
-            await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(h)=>{
-            // fetch hotel complete detail
-            const hotel=await Hotel.findById(req.params.hotelid).populate({
-                path:"review",populate:{path:"user"}
-            }).populate("rooms");
-            const updatedHotel=await Hotel.findById(h._id).populate("owner").populate("rooms").populate({
-                path:"review",populate:{path:"user"}
-            }).populate("rooms");
-            const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
-            res.status(200).json({updatedHotel,hotel,allHotel,newRoom});
+            
+// 
+            const newRoom=await new Room({...req.body,hotel:req.params.hotelid,owner:req.params.ownerid})
+            await newRoom.save().then(async(newroom)=>{
+                await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:newroom._id}},{new:true}).then(async(hotel)=>{
+                    const updatedHotel=await Hotel.findById(hotel._id).populate("owner").populate("rooms").populate({
+                        path:"review",populate:{path:"user"}}).populate("rooms");
+                    const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner");
+                    res.status(200).json({updatedHotel,allHotel,newRoom});
+
+                
+
+        
+
+           
                 
             }).catch((error)=>{
                 next(error)
