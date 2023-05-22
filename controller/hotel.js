@@ -1,4 +1,3 @@
-
 import Hotel from "../models/hotel.js";
 import Owner from "../models/owner.js";
 import Review from "../models/review.js";
