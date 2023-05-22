@@ -23,7 +23,7 @@ export const createHotel=async(req, res,next) => {
     // Save the hotel document to the database
     const savedHotel = await newHotel.save().then(async(hotel)=>{
       const allHotel=await Hotel.find().populate("owner");
-      res.status(200).json({allHotel,savedHotel});
+      res.status(200).json({allHotel,hotel});
     });
 
 
