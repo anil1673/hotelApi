@@ -22,8 +22,8 @@ export const createHotel=async(req, res,next) => {
 
     // Save the hotel document to the database
     const savedHotel = await newHotel.save().then(async(hotel)=>{
-      const allHotel=await Hotel.find().populate("owner");
-      const currentHotel=await Hotel.findById(hotel._id).populate("owner");
+      const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
+      const currentHotel=await Hotel.findById(hotel._id).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
       res.status(200).json({allHotel,currentHotel});
     });
 
@@ -55,7 +55,8 @@ export const createHotel=async(req, res,next) => {
 // update hotel
 export const updateHotel=async(req,res,next)=>{
    try{ 
-    const updatedHotel=await Hotel.findByIdAndUpdate(req.params.hotelid,{$set:req.body},{new:true}).then((hotel)=>{
+    const updatedHotel=await Hotel.findByIdAndUpdate(req.params.hotelid,{$set:req.body},{new:true}).then(async(hotel)=>{
+      const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
       res.status(200).json({updatedHotel:hotel,allHotel:allHotel})
     });
 
@@ -74,8 +75,8 @@ export const deleteHotel=async(req,res,next)=>{
         await Owner.findByIdAndUpdate(req.owner._id,{$pull:{hotel:req.params.hotelid}},{new:true});
         const roomIds=hotel.rooms;
         await Room.deleteMany({_id:{$in:roomIds}}).then(async (room) => {
-          
-            res.status(200).json(room)
+          const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
+            res.status(200).json({allHotel,room})
           })
           .catch(error => {
             next(error)
