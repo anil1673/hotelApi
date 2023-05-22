@@ -10,7 +10,7 @@ export const createRoom=async(req,res,next)=>{
         }else{
 
             const newRoom=new Room({...req.body,hotel:req.params.hotelid});
-            await newRoom.save().then(async(room)=>{
+            await (await newRoom.save()).populate("owner").then(async(room)=>{
             await Hotel.findByIdAndUpdate(req.params.hotelid,{$push:{rooms:room._id}},{new:true}).then(async(updatedHotel)=>{
             // fetch hotel complete detail
             const hotel=await Hotel.findById(req.params.hotelid).populate({

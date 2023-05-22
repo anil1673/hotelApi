@@ -17,6 +17,7 @@ const roomSchema=new mongoose.Schema({
         type:String,
     },
     hotel:{ type: mongoose.Schema.Types.ObjectId, ref: 'Hotel' },
+    owner:{type: mongoose.Schema.Types.ObjectId, ref: 'Owner'},
     status:{
         type:Boolean,
         default:false

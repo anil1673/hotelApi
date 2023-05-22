@@ -14,12 +14,14 @@ export const createHotel=async(req, res,next) => {
     // Create new hotel document
     const newHotel = new Hotel({
       ...req.body,
+
+      owner:req.params.ownerid
       // photos: photoResults,
       // Set other fields from the request body
     });
 
     // Save the hotel document to the database
-    const savedHotel = await newHotel.save();
+    const savedHotel = await newHotel.save().populate("owner");
 
     res.status(200).json(savedHotel);
   
