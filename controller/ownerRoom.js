@@ -8,7 +8,8 @@ export const createRoom = async (req, res, next) => {
         if (req.body.number === "" || req.body.type === "" || req.body.price === "") {
             res.status(200).json("number , type and price can't be empty");
         } else {
-            const newRoom = await new Room({ ...req.body, hotel: req.params.hotelid, owner: req.params.ownerid, img: req.file.path })
+
+            const newRoom = await new Room({ ...req.body, hotel: req.params.hotelid, owner: req.params.ownerid })
             await newRoom.save().then(async (newroom) => {
                 await Hotel.findByIdAndUpdate(req.params.hotelid, { $push: { rooms: newroom._id } }, { new: true }).then(async (h) => {
                     const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
@@ -25,20 +26,34 @@ export const createRoom = async (req, res, next) => {
     }
 }
 
+//upload profile pic 
+export const updloadRoomPic = async (req, res, next) => {
+    try {
+        console.log(req.file.path);
+        await Room.findByIdAndUpdate(req.params.roomid, { $set: { img: req.file.path } }, { new: true }).then(async (room) => {
+            const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+            res.status(200).json({ hotel });
+        }).catch((error) => {
+            next(error);
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 
 // update room
 export const updateRoom = async (req, res, next) => {
     try {
-        
-            await Room.findByIdAndUpdate(req.params.roomid, { $set:{...req.body,img:req.file.path}}, { new: true }).then(async (updatedRoom) => {
-                // fetch hotel complete detail
-                const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-                // response
-                res.status(200).json({ hotel });
-    
-                }).catch((error) => {
-                    next(error)
-                });
+
+        await Room.findByIdAndUpdate(req.params.roomid, { $set: { ...req.body } }, { new: true }).then(async (updatedRoom) => {
+            // fetch hotel complete detail
+            const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+            // response
+            res.status(200).json({ hotel });
+
+        }).catch((error) => {
+            next(error)
+        });
     } catch (error) {
         next(error)
     }

@@ -26,7 +26,8 @@ const UserSchema=new mongoose.Schema({
         type:Boolean,
         default:false,
     },
-    review:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }]
+    review:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+    booking:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Booking' }]
 
 },{
     timestamps:true

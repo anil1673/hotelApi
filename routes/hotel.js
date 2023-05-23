@@ -1,5 +1,5 @@
 import express from "express";
-import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel } from "../controller/hotel.js";
+import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel, updloadHotelPic } from "../controller/hotel.js";
 // import { verifyOwner } from "../middleware/verify.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 // import { UploadStream } from "cloudinary";
@@ -10,8 +10,10 @@ import verifyOwner from "../middleware/verifyOwner.js";
 
 // create hotel
 // uploadImages is name attr of html 
-// hotelRouter.post("/createhotel/:ownerid",verifyOwner,upload.array('photos'),createHotel);
 hotelRouter.post("/createhotel/:ownerid",verifyOwner,createHotel);
+
+// upload  image for hotel
+hotelRouter.post("/uploadHotelPic/:ownerid/:hotelid",verifyOwner,upload.array('photos'),updloadHotelPic);
 
 // update hotel
 hotelRouter.put("/updatehotel/:ownerid/:hotelid",verifyOwner,updateHotel);
