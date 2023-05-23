@@ -1,5 +1,5 @@
 import express from "express";
-import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel, updloadHotelPic } from "../controller/hotel.js";
+import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel, updloadHotelPicToClodinary,uploadRoomPicToHotel } from "../controller/hotel.js";
 // import { verifyOwner } from "../middleware/verify.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 // import { UploadStream } from "cloudinary";
@@ -12,8 +12,11 @@ import verifyOwner from "../middleware/verifyOwner.js";
 // uploadImages is name attr of html 
 hotelRouter.post("/createhotel/:ownerid",verifyOwner,createHotel);
 
-// upload  image for hotel
-hotelRouter.post("/uploadHotelPic/:ownerid/:hotelid",verifyOwner,upload.array('photos'),updloadHotelPic);
+// upload  image to cloudinary
+hotelRouter.post("/uploadhotelpictocloud",upload.array('photos'),updloadHotelPicToClodinary);
+
+// upload hotel pic to hotel
+hotelRouter.post("/uploadhotelpictohotel/:ownerid/:hotelid",verifyOwner,uploadRoomPicToHotel);
 
 // update hotel
 hotelRouter.put("/updatehotel/:ownerid/:hotelid",verifyOwner,updateHotel);

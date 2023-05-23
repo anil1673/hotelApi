@@ -32,7 +32,7 @@ export const createHotel=async(req, res,next) => {
 };
 
 //upload hotel pic 
-export const updloadHotelPic = async (req, res, next) => {
+export const updloadHotelPicToClodinary = async (req, res, next) => {
   try {
     const photoPromises = req.files.map((file) =>
       file.path
@@ -40,8 +40,17 @@ export const updloadHotelPic = async (req, res, next) => {
     const photoResults = await Promise.all(photoPromises);
 
     // Create new hotel document
+          res.status(200).json({ photoResults });
+     
+  } catch (error) {
+      next(error)
+  }
+}
 
-      await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: { photos: photoResults } }, { new: true }).then(async (h) => {
+export const uploadRoomPicToHotel=async(req,res,next)=>{
+  try {
+      const {url}=req.body;
+      await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: {...req.body,photos:url} }, { new: true }).then(async (room) => {
           const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
           res.status(200).json({ hotel });
       }).catch((error) => {
@@ -50,8 +59,8 @@ export const updloadHotelPic = async (req, res, next) => {
   } catch (error) {
       next(error)
   }
+  
 }
-
 
 
 // update hotel
