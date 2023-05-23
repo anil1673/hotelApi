@@ -26,11 +26,24 @@ export const createRoom = async (req, res, next) => {
     }
 }
 
-//upload profile pic 
-export const updloadRoomPic = async (req, res, next) => {
+//upload profile pic  to cludinary
+export const updloadRoomPicToClodinary = async (req, res, next) => {
     try {
         console.log(req.file.path);
-        await Room.findByIdAndUpdate(req.params.roomid, { $set: { img: req.file.path } }, { new: true }).then(async (room) => {
+        res.status(200).json({url:req.file.path});
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+// upload profile pic to room
+export const uploadRoomPicToRoom=async(req,res,next)=>{
+    try {
+        const {url}=req.body;
+    
+    
+        await Room.findByIdAndUpdate(req.params.roomid, { $set: { img: url } }, { new: true }).then(async (room) => {
             const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
             res.status(200).json({ hotel });
         }).catch((error) => {
@@ -39,7 +52,11 @@ export const updloadRoomPic = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+    
 }
+
+
+
 
 // update room
 export const updateRoom = async (req, res, next) => {

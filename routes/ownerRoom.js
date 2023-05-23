@@ -1,5 +1,5 @@
 import express from "express";
-import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPic} from "../controller/ownerRoom.js";
+import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPicToClodinary,uploadRoomPicToRoom} from "../controller/ownerRoom.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 import { upload } from "../photosLink.js";
 
@@ -10,8 +10,14 @@ ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
 // ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
 
 
-// upload room pic
-ownerRoomRouter.post("/uploadroompic/:ownerid/:hotelid/:roomid",verifyOwner,upload.single("photos"),updloadRoomPic);
+// upload room pic to cludinary
+ownerRoomRouter.post("/uploadroompictocloud",upload.single("photos"),updloadRoomPicToClodinary);
+
+// upload room pic to room
+ownerRoomRouter.post("/uploadroompictoroom/:ownerid/:hotelid/:roomid",verifyOwner,uploadRoomPicToRoom);
+
+// upload room pic to room
+
 
 // update room
 ownerRoomRouter.put("/updateroom/:ownerid/:hotelid/:roomid",verifyOwner,updateRoom);
