@@ -29,15 +29,16 @@ export const createRoom = async (req, res, next) => {
 // update room
 export const updateRoom = async (req, res, next) => {
     try {
-        await Room.findByIdAndUpdate(req.params.roomid, { $set: req.body }, { new: true }).then(async (updatedRoom) => {
-            // fetch hotel complete detail
-            const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-            // response
-            res.status(200).json({ hotel });
-
-        }).catch((error) => {
-            next(error)
-        })
+        
+            await Room.findByIdAndUpdate(req.params.roomid, { $set:{...req.body,img:req.file.path}}, { new: true }).then(async (updatedRoom) => {
+                // fetch hotel complete detail
+                const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+                // response
+                res.status(200).json({ hotel });
+    
+                }).catch((error) => {
+                    next(error)
+                });
     } catch (error) {
         next(error)
     }
