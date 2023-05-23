@@ -6,8 +6,8 @@ import { upload } from "../photosLink.js";
 const ownerRoomRouter=express.Router();
 
 // create room
-// ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,upload.single("photos"),createRoom);
-ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
+ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,upload.single("photos"),createRoom);
+// ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
 // update room
 ownerRoomRouter.put("/updateroom/:ownerid/:hotelid/:roomid",verifyOwner,updateRoom);
 

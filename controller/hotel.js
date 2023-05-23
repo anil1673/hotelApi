@@ -21,44 +21,24 @@ export const createHotel=async(req, res,next) => {
     });
 
     // Save the hotel document to the database
-    const savedHotel = await newHotel.save().then(async(hotel)=>{
-      await Owner.findByIdAndUpdate(req.params.ownerid,{$push:{hotel:hotel._id}});
-      const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
-      const currentHotel=await Hotel.findById(hotel._id).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
-      res.status(200).json({allHotel,currentHotel});
-    });
-
-
-  
-  
+    const savedHotel = await newHotel.save().then(async(h)=>{
+      await Owner.findByIdAndUpdate(req.params.ownerid,{$push:{hotel:h._id}});
+      const hotel = await Hotel.findById(h._id).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+      res.status(200).json({hotel});
+    }); 
   }catch(error){
     next(error);
   }
 };
-        
-    // export const createHotel=async(req,res,next)=>{
-    //   try{
-    //     const newHotel=new Hotel(req.body);
-    //     const updateOwner=await Owner.findByIdAndUpdate(req.owner._id,{$push:{hotel:newHotel._id}},{new:true});
-    //     const saveHotel=await newHotel.save().then(async(hotel)=>{
-    //     const allHotel=await Hotel.find();
-    //     res.status(200).json({newHotel:hotel,allHotel:allHotel});
-    //     });
-    //   }catch(error){
-    //     next(error)
-
-    //   }
-    // }
-
 
 
 
 // update hotel
 export const updateHotel=async(req,res,next)=>{
    try{ 
-    const updatedHotel=await Hotel.findByIdAndUpdate(req.params.hotelid,{$set:req.body},{new:true}).then(async(hotel)=>{
-      const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
-      res.status(200).json({updatedHotel:hotel,allHotel:allHotel})
+    const updatedHotel=await Hotel.findByIdAndUpdate(req.params.hotelid,{$set:req.body},{new:true}).then(async(h)=>{
+      const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+      res.status(200).json({hotel})
     });
 
     }catch(error){
@@ -76,13 +56,13 @@ export const deleteHotel=async(req,res,next)=>{
         await Owner.findByIdAndUpdate(req.owner._id,{$pull:{hotel:req.params.hotelid}},{new:true});
         const roomIds=hotel.rooms;
         await Room.deleteMany({_id:{$in:roomIds}}).then(async (room) => {
-          const allHotel=await Hotel.find({owner:req.params.ownerid}).populate({ path:"review",populate:{path:"user"} }).populate("rooms").populate("owner")
-            res.status(200).json({allHotel,room})
+          const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+            res.status(200).json("hotel deleted successfully")
           })
           .catch(error => {
             next(error)
           });
-        res.status(200).json("deleted successfully!!!!!");
+
 
  
      }catch(error){
@@ -107,8 +87,8 @@ export const getAllHotel=async(req,res,next)=>{
       const hotelIds = owner.hotel;
       // Find all hotels whose ID is contained in the owner's hotelIds array
       Hotel.find({ _id: { $in: hotelIds } })
-        .then(hotels => {
-          res.status(200).json(hotels)
+        .then(hotel => {
+          res.status(200).json(hotel)
         })
         .catch(error => {
           next(error)

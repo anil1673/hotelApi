@@ -10,7 +10,7 @@ export const updateProfilepic=async(req,res,next)=>{
        console.log(req.file.path) ;
        await User.findByIdAndUpdate(req.params.userid,{$set:{img:req.file.path}},{new:true}).then((user)=>{
         console.log(user)
-            res.status(200).json({user:user});
+            res.status(200).json({user});
        }).catch((error)=>{
         next(error);
        })
