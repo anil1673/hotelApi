@@ -41,7 +41,7 @@ export const updloadHotelPic = async (req, res, next) => {
 
     // Create new hotel document
 
-      await Hotel.findByIdAndUpdate(req.params.hotel, { $set: { photos: photoResults } }, { new: true }).then(async (h) => {
+      await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: { photos: photoResults } }, { new: true }).then(async (h) => {
           const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
           res.status(200).json({ hotel });
       }).catch((error) => {
