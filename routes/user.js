@@ -5,7 +5,7 @@ const userRouter=express.Router();
 import { upload } from "../photosLink.js";
 
 // get All Hotel
-userRouter.get("/getallhotel",verifyUser,getAllHotel);
+userRouter.get("/getallhotel/:userid",verifyUser,getAllHotel);
 
 // update profile pic
 userRouter.post("/updateprofilepic/:userid/",verifyUser,upload.single("photos"),updateProfilepic);

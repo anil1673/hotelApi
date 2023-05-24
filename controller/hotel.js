@@ -10,7 +10,7 @@ export const createHotel = async (req, res, next) => {
       const newHotel = new Hotel({
         ...req.body,
         owner: req.params.ownerid,
-        photos: photoResults
+        photos: req.body.photoResults
       });
       // Save the hotel document to the database
       const savedHotel = await newHotel.save().then(async (h) => {
