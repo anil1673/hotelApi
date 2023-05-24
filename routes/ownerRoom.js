@@ -1,5 +1,5 @@
 import express from "express";
-import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPicToClodinary,uploadRoomPicToRoom} from "../controller/ownerRoom.js";
+import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPicToClodinary} from "../controller/ownerRoom.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 import { upload } from "../photosLink.js";
 

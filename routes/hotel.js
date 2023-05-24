@@ -1,5 +1,5 @@
 import express from "express";
-import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel, updloadHotelPicToClodinary,uploadRoomPicToHotel } from "../controller/hotel.js";
+import { createHotel, deleteHotel, getAllHotel, getSingleHotel, updateHotel, updloadHotelPicToClodinary } from "../controller/hotel.js";
 // import { verifyOwner } from "../middleware/verify.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 // import { UploadStream } from "cloudinary";
