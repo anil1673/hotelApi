@@ -62,7 +62,7 @@ export const getAllReview = async (req, res, next) => {
 export const getAllHotel = async (req, res, next) => {
     try {
         await Hotel.find().then((hotel) => {
-            res.status(json).json({ hotel })
+            res.status(200).json({ hotel })
         }).catch((error) => {
             next(error)
         })
