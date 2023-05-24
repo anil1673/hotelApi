@@ -16,7 +16,7 @@ hotelRouter.post("/createhotel/:ownerid",verifyOwner,createHotel);
 hotelRouter.post("/uploadhotelpictocloud",upload.array('photos'),updloadHotelPicToClodinary);
 
 // upload hotel pic to hotel
-hotelRouter.post("/uploadhotelpictohotel/:ownerid/:hotelid",verifyOwner,uploadRoomPicToHotel);
+// hotelRouter.post("/uploadhotelpictohotel/:ownerid/:hotelid",verifyOwner,uploadRoomPicToHotel);
 
 // update hotel
 hotelRouter.put("/updatehotel/:ownerid/:hotelid",verifyOwner,updateHotel);

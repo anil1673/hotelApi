@@ -14,7 +14,7 @@ ownerRoomRouter.post("/createroom/:ownerid/:hotelid",verifyOwner,createRoom);
 ownerRoomRouter.post("/uploadroompictocloud",upload.single("photos"),updloadRoomPicToClodinary);
 
 // upload room pic to room
-ownerRoomRouter.post("/uploadroompictoroom/:ownerid/:hotelid/:roomid",verifyOwner,uploadRoomPicToRoom);
+// ownerRoomRouter.post("/uploadroompictoroom/:ownerid/:hotelid/:roomid",verifyOwner,uploadRoomPicToRoom);
 
 // upload room pic to room
 
