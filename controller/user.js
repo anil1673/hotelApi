@@ -5,16 +5,35 @@ import Room from "../models/room.js";
 import User from "../models/user.js";
 
 
-// UPDATE PROFILE PIC
-export const updateProfilepic = async (req, res, next) => {
+// uplaod profile pic to cloudinary
+export const updloadProfilePicToClodinary = async (req, res, next) => {
     try {
         console.log(req.file.path);
-        await User.findByIdAndUpdate(req.params.userid, { $set: { img: req.file.path } }, { new: true }).then((user) => {
-            console.log(user)
-            res.status(200).json({ user });
-        }).catch((error) => {
-            next(error);
-        })
+        res.status(200).json({ url: req.file.path });
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+// UPDATE PROFILE PIC
+export const updateProfile = async (req, res, next) => {
+    try {
+        if (req.body.url) {
+            await User.findByIdAndUpdate(req.params.userid, { $set: { ...req.body, img: req.body.url } }, { new: true }).then((user) => {
+                res.status(200).json({ user });
+            }).catch((error) => {
+                next(error);
+            })
+        } else {
+            await User.findByIdAndUpdate(req.params.userid, { $set: req.body }, { new: true }).then((user) => {
+                console.log(user)
+                res.status(200).json({ user });
+            }).catch((error) => {
+                next(error);
+            })
+        }
+
     } catch (error) {
         next(error)
     }
@@ -72,8 +91,18 @@ export const getAllHotel = async (req, res, next) => {
     }
 }
 
+// get specific hotel
+export const getSingleHotel=async(req,res,next)=>{
+    try{
+       const hotel= await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+        res.status(200).json({hotel})
+    }catch(error){
+        next(error)
+    }
+}
+
 // book Hotel
-export const booking = async (req,res,next) => {
+export const booking = async (req, res, next) => {
     try {
         const { hotelid, roomid, userid } = req.params;
         const newBooking = new Booking({
@@ -83,12 +112,12 @@ export const booking = async (req,res,next) => {
             startDate: req.body.startDate,
             endDate: req.body.endDate,
         });
-
         await newBooking.save().then(async (book) => {
+            console.log("booking");
             await Room.findByIdAndUpdate(req.params.roomid, { $set: { status: false, user: userid } }, { new: true }).then(async () => {
                 await User.findByIdAndUpdate(userid, { $push: { booking: book._id } }, { new: true }).then(async () => {
                     const hotel = await Hotel.findById(hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-                    res.status(200).json({ hotel })
+                    res.status(200).json({ book })
                 }).catch((error) => {
                     next(error);
                 })
@@ -105,35 +134,75 @@ export const booking = async (req,res,next) => {
 }
 
 // cancel booking
-export const cancelBooking=async(req,res,next)=>{
-    try{
-        const {hotelid,userid,roomid,bookingid}=req.params;
-        await User.findByIdAndUpdate(userid,{$pull:{booking:bookingid}},{new:true}).then(async()=>{
-            await Room.findByIdAndUpdate(roomid,{$set:{user:null,status:true}},{new:true}).then(async()=>{
+export const cancelBooking = async (req, res, next) => {
+    try {
+        const { hotelid, userid, roomid, bookingid } = req.params;
+        await User.findByIdAndUpdate(userid, { $pull: { booking: bookingid } }, { new: true }).then(async () => {
+            await Room.findByIdAndUpdate(roomid, { $set: { user: null, status: true } }, { new: true }).then(async () => {
                 await Booking.findByIdAndDelete(bookingid);
                 const hotel = await Hotel.findById(hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-
-                res.status(200).json({hotel});
+                res.status(200).json({ hotel });
             }).catch((error) => {
-            next(error);
-        })
+                next(error);
+            })
         }).catch((error) => {
             next(error);
         })
-    }catch(error){
+    } catch (error) {
         next(error)
     }
 }
 
+
+
+// export automatic unbooking
+export const automaticUnBook=(req,res,next)=>{
+    try{
+        console.log("first")
+        setInterval(async() => {
+            const date2=new Date();
+            // console.log(date1);
+           const book=  await Booking.find();
+           await Promise.all(book.map(async(b)=>{
+            const date1=b.endDate;
+            if(date1<date2){
+                console.log("1",date1,date2);
+                let user=b.user;
+                let room=b.room;
+                let hotel=b.hotel;
+                let bid=b._id
+
+                await Booking.findByIdAndDelete(b._id).then(async()=>{
+                    await User.findByIdAndUpdate(user,{$pull:{booking:bid}}).then(async()=>{
+                        await Room.findByIdAndUpdate(room,{$set:{user:null}}).then(()=>{
+                           
+
+                        })
+                    })
+                })
+            }
+
+           }))
+
+            
+          }, 2000); // 1 hour
+          res.status(200).json("okkkkkkkk")
+          
+    }catch(error){
+
+    }
+}
 
 // get all bookings
 
-export const getAllBooking=async(req,res,next)=>{
-    try{
-        const booking=await Booking.find({user:req.params.userid}).populate("hotel").populate("room").populate("user");
-        res.status(200).json({booking})
-    }catch(error){
+export const getAllBooking = async (req, res, next) => {
+    try {
+        const booking = await Booking.find({ user: req.params.userid }).populate("hotel").populate("room").populate("user");
+        res.status(200).json({ booking })
+    } catch (error) {
         next(error)
     }
 }
+
+
 

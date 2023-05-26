@@ -51,22 +51,6 @@ export const updloadHotelPicToClodinary = async (req, res, next) => {
   }
 }
 
-// export const uploadRoomPicToHotel=async(req,res,next)=>{
-//   try {
-//       const {photoResults}=req.body;
-//       await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: {...req.body,photos:photoResults} }, { new: true }).then(async (room) => {
-//           const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-//           res.status(200).json({ hotel });
-//       }).catch((error) => {
-//           next(error);
-//       })
-//   } catch (error) {
-//       next(error)
-//   }
-
-// }
-
-
 // update hotel
 export const updateHotel = async (req, res, next) => {
   try {

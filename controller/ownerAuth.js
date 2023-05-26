@@ -10,7 +10,6 @@ import { transporter } from "../email/emailConfig.js";
 export const register=async(req,res,next)=>{
     try{
         const hashPass=await bcrypt.hash(req.body.password,10);
-        console.log(req.body)
         const {ownername,email,password}=req.body;
         
         const isEmailUnique=await Owner.findOne({email});
