@@ -75,7 +75,7 @@ export const login=async(req,res,next)=>{
 
 
 export const generateOtp=async(req,res,next)=>{
-    const {email}=req.query;
+    const {email}=req.body;
     await Owner.findOne({email}).then(async(owner)=>{
         if(owner){
             req.app.locals.OTP=await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false});
@@ -105,7 +105,7 @@ export const generateOtp=async(req,res,next)=>{
 // this work when user type otp and click verify Otp button
 export const verifyOtp=async(req,res,next)=>{
     try{
-        const {otp}=req.query;
+        const {otp}=req.body;
         if(parseInt(req.app.locals.OTP) === parseInt(otp)){
             // entered otp matched
             console.log("1111")
@@ -133,7 +133,7 @@ export const verifyOtp=async(req,res,next)=>{
 export const savePassword=async(req,res,next)=>{
     try{
         if(req.app.locals.resetSession){
-            const {email}=req.query;
+            const {email}=req.body;
             
             const {password,confirmPassword}=req.body;
             await Owner.findOne({email}).then(async(owner)=>{
