@@ -87,14 +87,16 @@ export const generateOtp=async(req,res,next)=>{
             subject:"Change Password",
             html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
         }).then(()=>{
-            
+            res.status(200).json({
+                otp:req.app.locals.OTP
+            })
         }).catch((error)=>{
             console.log(error)
         })
+    }).catch((error)=>{
+        res.status(404).json("invalid emai;")
     })
-    res.status(200).json({
-        code:req.app.locals.OTP
-    })
+    
 
   
 }
