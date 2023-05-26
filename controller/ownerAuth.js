@@ -75,26 +75,26 @@ export const login=async(req,res,next)=>{
 
 
 export const generateOtp=async(req,res,next)=>{
-    
     const {email}=req.query;
-    req.app.locals.OTP=await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false});
-
-    // console.log(req.app.locals.OTP)
-    await Owner.find({email}).then(async(owner)=>{
-        await transporter.sendMail({
-            from:process.env.EMAIL_FROM,
-            to:email,
-            subject:"Change Password",
-            html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
-        }).then(()=>{
-            res.status(200).json({
-                otp:req.app.locals.OTP
-            })
-        }).catch((error)=>{
-            console.log(error)
-        })
-    }).catch((error)=>{
-        res.status(404).json("invalid emai;")
+    await Owner.findOne({email}).then(async(owner)=>{
+        if(owner){
+            req.app.locals.OTP=await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false});
+            await transporter.sendMail({
+                            from:process.env.EMAIL_FROM,
+                            to:email,
+                            subject:"Change Password",
+                            html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
+                        }).then(()=>{
+                            res.status(200).json({
+                                otp:req.app.locals.OTP
+                            })
+                            
+                        }).catch((error)=>{
+                            res.status(404).json("invalid email")
+                        })
+        }else{
+            res.status(404).json("email not available")
+        }
     })
     
 
