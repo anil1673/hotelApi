@@ -10,7 +10,6 @@ export const updloadProfilePicToClodinary = async (req, res, next) => {
     try {
         console.log(req.file.path);
         res.status(200).json({ url: req.file.path });
-
     } catch (error) {
         next(error)
     }
@@ -80,11 +79,8 @@ export const getAllReview = async (req, res, next) => {
 // get all hotel
 export const getAllHotel = async (req, res, next) => {
     try {
-        await Hotel.find().then((hotel) => {
-            res.status(200).json({ hotel })
-        }).catch((error) => {
-            next(error)
-        })
+       const hotel= await Hotel.find().populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+        res.status(200).json({hotel})
 
     } catch (error) {
         next(error);
