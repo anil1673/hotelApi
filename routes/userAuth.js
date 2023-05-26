@@ -9,9 +9,9 @@ userAuthRouter.post("/register2",register);
 // login
 userAuthRouter.post("/login2",login);
 // generate otp
-userAuthRouter.get("/generateotp2",localVariables,generateOtp);
+userAuthRouter.post("/generateotp2",localVariables,generateOtp);
 // verify otp
-userAuthRouter.get("/verifyotp2",verifyOtp);
+userAuthRouter.post("/verifyotp2",verifyOtp);
 // save passoword 
 userAuthRouter.post("/savepassword2",savePassword);
 
