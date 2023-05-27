@@ -145,7 +145,7 @@ export const getAllBooking=async(req,res,next)=>{
 
     //    const ownersHotel=owner.hotel;
 
-      const booking= await Booking.find({hotel:owner.hotel});
+      const booking= await Booking.find({hotel:owner.hotel}).populate("hotel").populate("room").populate("user");
 
       
 
