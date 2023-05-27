@@ -137,7 +137,7 @@ export const cancelBooking = async (req, res, next) => {
             await Room.findByIdAndUpdate(roomid, { $set: { user: null, status: true } }, { new: true }).then(async () => {
                 const book=await Booking.findById(bookingid)
                 await Booking.findByIdAndDelete(bookingid).then(async(g)=>{
-                    const booking= await Booking.find({hotel:owner.hotel}).populate("hotel").populate("room").populate("user");
+                    const booking= await Booking.find({user:userid}).populate("hotel").populate("room").populate("user");
                     res.status(200).json({ booking });
                 });
 
