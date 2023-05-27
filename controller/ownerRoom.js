@@ -1,5 +1,7 @@
 import Hotel from "../models/hotel.js";
 import Room from "../models/room.js";
+import Owner from "../models/owner.js";
+import Booking from "../models/booking.js"
 
 // create Room
 export const createRoom = async (req, res, next) => {
@@ -132,5 +134,35 @@ export const getAllRoom = async (req, res, next) => {
         })
     } catch (error) {
         next(error);
+    }
+}
+
+// get all booking of certain hotel
+
+export const getAllBooking=async(req,res,next)=>{
+    try{
+       const owner= await Owner.findOne({_id:req.params.ownerid});
+
+    //    const ownersHotel=owner.hotel;
+
+      const booking= await Booking.find({hotel:owner.hotel});
+
+      
+
+
+      if(booking.length!=0){
+        res.status(200).json({booking})
+      }else{
+        res.status(200).json("no booking in your hotel")
+      }
+
+      
+
+       
+       
+       
+
+    }catch(error){
+        next(error)
     }
 }

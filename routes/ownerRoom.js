@@ -1,5 +1,5 @@
 import express from "express";
-import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPicToClodinary} from "../controller/ownerRoom.js";
+import { createRoom, deleteRoom, updateRoom ,getAllRoom, updloadRoomPicToClodinary, getAllBooking} from "../controller/ownerRoom.js";
 import verifyOwner from "../middleware/verifyOwner.js";
 import { upload } from "../photosLink.js";
 
@@ -27,6 +27,9 @@ ownerRoomRouter.delete("/deleteroom/:ownerid/:hotelid/:roomid",verifyOwner,delet
 
 // get all room of certain hotel
 ownerRoomRouter.get("/getallroom/:ownerid/:hotelid/",verifyOwner,getAllRoom);
+
+// get all booking of certain hotel
+ownerRoomRouter.get("/getallbooking/:ownerid",verifyOwner,getAllBooking);
 
 
 
