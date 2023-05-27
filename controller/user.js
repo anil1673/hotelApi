@@ -132,57 +132,22 @@ export const booking = async (req, res, next) => {
 export const cancelBooking = async (req, res, next) => {
     try {
         const { hotelid, userid, roomid, bookingid } = req.params;
-        const u = await User.findById(userid);
-        const r = await Room.findById(roomid);
-        const b = await Booking.findById(bookingid);
+
+        await User.findByIdAndUpdate(userid, { $pull: { booking: bookingid } }, { new: true }).then(async () => {
+            await Room.findByIdAndUpdate(roomid, { $set: { user: null, status: true } }, { new: true }).then(async () => {
+                const book=await Booking.findById(bookingid)
+                await Booking.findByIdAndDelete(bookingid).then(async(g)=>{
+                    const booking= await Booking.find({hotel:owner.hotel}).populate("hotel").populate("room").populate("user");
+                    res.status(200).json({ booking });
+                });
 
 
-
-        // console.log(u._id, r.user._id, b.user._id)
-        // if()
-        const a= parseInt(u._id)
-        console.log(a)
-        console.log(parseInt(b.user))
-        console.log(parseInt(r.user))
-
-        if (parseInt(u._id) === parseInt(r.user) === parseInt(b.user)) {
-            console.log("first")
-
-            // await User.findByIdAndUpdate(userid, { $pull: { booking: bookingid } }, { new: true }).then(async () => {
-            //     await Room.findByIdAndUpdate(roomid, { $set: { user: null, status: true } }, { new: true }).then(async () => {
-            //         const book = await Booking.findById(bookingid)
-            //         await Booking.findByIdAndDelete(bookingid).then(async (g) => {
-            //             const booking = await Booking.find({ user: req.params.userid }).populate("hotel").populate("room").populate("user");
-            //             res.status(200).json({ booking });
-            //         });
-
-
-            //     }).catch((error) => {
-            //         next(error);
-            //     })
-            // }).catch((error) => {
-            //     next(error);
-            // })
-        }else{
-            res.status(404).json("userid or roomid or bookingid may be mistake")
-        }
-
-
-        // await User.findByIdAndUpdate(userid, { $pull: { booking: bookingid } }, { new: true }).then(async () => {
-        //     await Room.findByIdAndUpdate(roomid, { $set: { user: null, status: true } }, { new: true }).then(async () => {
-        //         const book=await Booking.findById(bookingid)
-        //         await Booking.findByIdAndDelete(bookingid).then(async(g)=>{
-        //             const hotel = await Hotel.findById(hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-        //             res.status(200).json({ hotel });
-        //         });
-
-
-        //     }).catch((error) => {
-        //         next(error);
-        //     })
-        // }).catch((error) => {
-        //     next(error);
-        // })
+            }).catch((error) => {
+                next(error);
+            })
+        }).catch((error) => {
+            next(error);
+        })
     } catch (error) {
         next(error)
     }

@@ -143,13 +143,7 @@ export const getAllBooking=async(req,res,next)=>{
     try{
        const owner= await Owner.findOne({_id:req.params.ownerid});
 
-    //    const ownersHotel=owner.hotel;
-
       const booking= await Booking.find({hotel:owner.hotel}).populate("hotel").populate("room").populate("user");
-
-      
-
-
       if(booking.length!=0){
         res.status(200).json({booking})
       }else{
