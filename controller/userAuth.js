@@ -73,38 +73,36 @@ export const login=async(req,res,next)=>{
 
 
 export const generateOtp=async(req,res,next)=>{
-    
-    const {email}=req.query;
-    req.app.locals.OTP=await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false});
-
-    // console.log(req.app.locals.OTP)
-    await User.find({email}).then(async(user)=>{
-        await transporter.sendMail({
-            from:process.env.EMAIL_FROM,
-            to:email,
-            subject:"Change Password",
-            html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
-        }).then(()=>{
-            
-        }).catch((error)=>{
-            console.log(error)
-        })
-    })
-    res.status(200).json({
-        code:req.app.locals.OTP
-    })
-
-  
+    const {email}=req.body;
+    await User.findOne({email}).then(async(user)=>{
+        if(user){
+            req.app.locals.OTP=await otpGenerator.generate(6,{lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false});
+            await transporter.sendMail({
+                            from:process.env.EMAIL_FROM,
+                            to:email,
+                            subject:"Change Password",
+                            html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
+                        }).then(()=>{
+                            res.status(200).json({
+                                otp:req.app.locals.OTP
+                            })
+                            
+                        }).catch((error)=>{
+                            res.status(404).json("invalid email")
+                        })
+        }else{
+            res.status(404).json("email not available")
+        }
+    }) 
 }
 
 // verify OTP
 // this work when user type otp and click verify Otp button
 export const verifyOtp=async(req,res,next)=>{
     try{
-        const {otp}=req.query;
+        const {otp}=req.body;
         if(parseInt(req.app.locals.OTP) === parseInt(otp)){
             // entered otp matched
-            console.log("1111")
             req.app.locals.OTP=null;
             req.app.locals.resetSession=true;
             res.status(200).json({
@@ -129,7 +127,7 @@ export const verifyOtp=async(req,res,next)=>{
 export const savePassword=async(req,res,next)=>{
     try{
         if(req.app.locals.resetSession){
-            const {email}=req.query;
+            const {email}=req.body;
             const {password,confirmPassword}=req.body;
             await User.findOne({email}).then(async(user)=>{
                 console.log(password , confirmPassword)
