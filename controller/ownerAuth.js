@@ -95,10 +95,7 @@ export const generateOtp=async(req,res,next)=>{
         }else{
             res.status(404).json("email not available")
         }
-    })
-    
-
-  
+    }) 
 }
 
 // verify OTP
@@ -108,7 +105,6 @@ export const verifyOtp=async(req,res,next)=>{
         const {otp}=req.body;
         if(parseInt(req.app.locals.OTP) === parseInt(otp)){
             // entered otp matched
-            console.log("1111")
             req.app.locals.OTP=null;
             req.app.locals.resetSession=true;
             res.status(200).json({

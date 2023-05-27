@@ -79,8 +79,8 @@ export const getAllReview = async (req, res, next) => {
 // get all hotel
 export const getAllHotel = async (req, res, next) => {
     try {
-       const hotel= await Hotel.find().populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-        res.status(200).json({hotel})
+        const hotel = await Hotel.find().populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+        res.status(200).json({ hotel })
 
     } catch (error) {
         next(error);
@@ -88,11 +88,11 @@ export const getAllHotel = async (req, res, next) => {
 }
 
 // get specific hotel
-export const getSingleHotel=async(req,res,next)=>{
-    try{
-       const hotel= await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-        res.status(200).json({hotel})
-    }catch(error){
+export const getSingleHotel = async (req, res, next) => {
+    try {
+        const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+        res.status(200).json({ hotel })
+    } catch (error) {
         next(error)
     }
 }
@@ -109,7 +109,6 @@ export const booking = async (req, res, next) => {
             endDate: req.body.endDate,
         });
         await newBooking.save().then(async (book) => {
-            console.log("booking");
             await Room.findByIdAndUpdate(req.params.roomid, { $set: { status: false, user: userid } }, { new: true }).then(async () => {
                 await User.findByIdAndUpdate(userid, { $push: { booking: book._id } }, { new: true }).then(async () => {
                     const hotel = await Hotel.findById(hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
@@ -152,39 +151,38 @@ export const cancelBooking = async (req, res, next) => {
 
 
 // export automatic unbooking
-export const automaticUnBook=(req,res,next)=>{
-    try{
+export const automaticUnBook = (req, res, next) => {
+    try {
         console.log("first")
-        setInterval(async() => {
-            const date2=new Date();
+        setInterval(async () => {
+            const date2 = new Date();
             // console.log(date1);
-           const book=  await Booking.find();
-           await Promise.all(book.map(async(b)=>{
-            const date1=b.endDate;
-            if(date1<date2){
-                console.log("1",date1,date2);
-                let user=b.user;
-                let room=b.room;
-                let hotel=b.hotel;
-                let bid=b._id
+            const book = await Booking.find();
+            await Promise.all(book.map(async (b) => {
+                const date1 = b.endDate;
+                if (date1 < date2) {
+                    console.log("1", date1, date2);
+                    let user = b.user;
+                    let room = b.room;
+                    let hotel = b.hotel;
+                    let bid = b._id
 
-                await Booking.findByIdAndDelete(b._id).then(async()=>{
-                    await User.findByIdAndUpdate(user,{$pull:{booking:bid}}).then(async()=>{
-                        await Room.findByIdAndUpdate(room,{$set:{user:null}}).then(()=>{
-                           
+                    await Booking.findByIdAndDelete(b._id).then(async () => {
+                        await User.findByIdAndUpdate(user, { $pull: { booking: bid } }).then(async () => {
+                            await Room.findByIdAndUpdate(room, { $set: { user: null } }).then(() => {
 
+                            })
                         })
                     })
-                })
-            }
+                }
 
-           }))
+            }))
 
-            
-          }, 2000); // 1 hour
-          res.status(200).json("okkkkkkkk")
-          
-    }catch(error){
+
+        }, 2000); // 1 hour
+        res.status(200).json("okkkkkkkk")
+
+    } catch (error) {
 
     }
 }
