@@ -140,8 +140,6 @@ export const cancelBooking = async (req, res, next) => {
                     const booking= await Booking.find({user:userid}).populate("hotel").populate("room").populate("user");
                     res.status(200).json({ booking });
                 });
-
-
             }).catch((error) => {
                 next(error);
             })

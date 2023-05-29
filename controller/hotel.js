@@ -135,9 +135,7 @@ export const getAllHotel = async (req, res, next) => {
 
 //  get single hotel
 export const getSingleHotel = async (req, res, next) => {
-  const hotel = await Hotel.findById(req.params.hotelid).populate({
-    path: "review", populate: { path: "user" }
-  }).populate("rooms");
+  const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
   res.status(200).json({ hotel });
 }
 
