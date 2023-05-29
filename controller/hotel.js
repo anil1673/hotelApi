@@ -60,7 +60,7 @@ export const updateHotel = async (req, res, next) => {
         res.status(200).json({ hotel })
       });
     } else {
-      const updatedHotel = await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: req.body }, { new: true }).then(async (h) => {
+        const updatedHotel = await Hotel.findByIdAndUpdate(req.params.hotelid, { $set: req.body }, { new: true }).then(async (h) => {
         const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
         res.status(200).json({ hotel })
       });

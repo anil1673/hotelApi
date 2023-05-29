@@ -22,7 +22,16 @@ const HotelSchema =new mongoose.Schema({
     rating:{
         type:Number,
         min:0,
-        max:5
+        max:5,
+        default:3
+    },
+    type:{
+        type:Number,
+        required:true
+    },
+    cheapestPrice:{
+        type:Number,
+        required:true
     },
     rooms:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Room' }],
     review:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
