@@ -84,14 +84,21 @@ export const generateOtp=async(req,res,next)=>{
                             html:`<h3>Password Change OTP is <h2> ${req.app.locals.OTP} </h2> </h3>`
                         }).then(()=>{
                             res.status(200).json({
-                                otp:req.app.locals.OTP
+                                otp:req.app.locals.OTP,
+                                status:true
                             })
                             
                         }).catch((error)=>{
-                            res.status(404).json("invalid email")
+                            res.status(404).json({
+                                otp:null,
+                                status:false
+                            })
                         })
         }else{
-            res.status(404).json("email not available")
+            res.status(404).json({
+                otp:null,
+                status:false
+            })
         }
     }) 
 }
