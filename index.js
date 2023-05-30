@@ -10,7 +10,7 @@ import ownerAuthRouter from "./routes/ownerAuth.js";
 import hotelRouter from "./routes/hotel.js";
 import ownerRoomRouter from "./routes/ownerRoom.js";
 import userRouter from "./routes/user.js";
-import recommendRouter from "./routes/recommendation.js";
+// import recommendRouter from "./routes/recommendation.js";
 
 
 
@@ -30,7 +30,7 @@ app.use("/ownerauth",ownerAuthRouter);
 app.use("/hotel",hotelRouter);
 app.use("/ownerroom",ownerRoomRouter);
 app.use("/user",userRouter);
-app.use("/recommend",recommendRouter);
+// app.use("/recommend",recommendRouter);
 
 
 
