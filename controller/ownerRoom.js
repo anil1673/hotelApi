@@ -147,7 +147,7 @@ export const getAllBooking=async(req,res,next)=>{
       if(booking.length!=0){
         res.status(200).json({booking})
       }else{
-        res.status(200).json("no booking in your hotel")
+        res.status(200).json({booking})
       }
 
       

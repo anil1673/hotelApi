@@ -1,38 +1,20 @@
 import fs from "fs"
 import { exec } from "child_process";
-
+import {PythonShell} from "python-shell"
 export const recommend = async (req, res, next) => {
     try {
-        const inputData = req.body;
-        // Set the path to your Python script that loads the pickle file
-        const pythonScriptPath = './load_pickle.py';
+      
+        
+// Specify the path to the Python script
+const pythonScriptPath = './hotel.pkl';
 
-        // Set the path to your pickle file
-        const pickleFilePath = './hotel.pkl';
-
-        // Build the command to execute the Python script
-        const command = `python ${pythonScriptPath} ${pickleFilePath}`;
-
-        // Execute the command and capture the output
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error executing Python script: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`Python script stderr: ${stderr}`);
-                return;
-            }
-
-            // Parse the output JSON from the Python script
-            const loadedData = JSON.parse(stdout);
-
-            // Use the loaded data as needed
-            console.log(loadedData);
-        });
-
-
-
+// Call the Python script
+PythonShell.run(pythonScriptPath, null, function (err) {
+  if (err) {
+    throw err;
+  }
+  console.log('Pickle file handling complete.');
+});
 
 
 

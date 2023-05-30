@@ -28,6 +28,7 @@
     "nodemon": "^2.0.22",
     "otp-generator": "^4.0.1",
     "picklejs": "^0.101.0",
+    "python-shell": "^5.0.0",
     "validator": "^13.9.0"
   }
 }
