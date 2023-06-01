@@ -17,7 +17,7 @@ userRouter.post("/updateprofil/:userid",verifyUser,updateProfile);
 userRouter.get("/getsinglehotel/:userid/:hotelid",verifyUser,getSingleHotel);
 
 // / get single hotel no auth
-userRouter.get("/getsinglehotel/:ownerid/:hotelid",getSingleHotelNoAuth);
+userRouter.get("/getsinglehotelnoauth/:ownerid/:hotelid",getSingleHotelNoAuth);
 
 // add review
 userRouter.post("/addreview/:userid/:hotelid",verifyUser,addReview);
