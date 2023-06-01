@@ -97,6 +97,17 @@ export const getSingleHotel = async (req, res, next) => {
     }
 }
 
+
+// get specific hotel without authorization
+export const getSingleHotelNoAuth = async (req, res, next) => {
+    try {
+        const hotel = await Hotel.findById(req.params.hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
+        res.status(200).json({ hotel })
+    } catch (error) {
+        next(error)
+    }
+}
+
 // book Hotel
 export const booking = async (req, res, next) => {
     try {

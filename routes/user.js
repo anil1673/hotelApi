@@ -1,6 +1,6 @@
 import { verifyUser } from "../middleware/verifyUser.js";
 import express from "express";
-import { addReview, booking, getAllReview, updateProfile,cancelBooking,getAllBooking, getAllHotel, updloadProfilePicToClodinary, getSingleHotel, automaticUnBook } from "../controller/user.js";
+import { addReview, booking, getAllReview, updateProfile,cancelBooking,getAllBooking, getAllHotel, updloadProfilePicToClodinary, getSingleHotel, automaticUnBook, getSingleHotelNoAuth } from "../controller/user.js";
 const userRouter=express.Router();
 import { upload } from "../photosLink.js";
 
@@ -15,6 +15,10 @@ userRouter.post("/updateprofil/:userid",verifyUser,updateProfile);
 
 // get single hotel
 userRouter.get("/getsinglehotel/:userid/:hotelid",verifyUser,getSingleHotel);
+
+// / get single hotel no auth
+userRouter.get("/getsinglehotel/:ownerid/:hotelid",getSingleHotelNoAuth);
+
 // add review
 userRouter.post("/addreview/:userid/:hotelid",verifyUser,addReview);
 
