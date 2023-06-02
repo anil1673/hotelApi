@@ -122,8 +122,8 @@ export const booking = async (req, res, next) => {
         await newBooking.save().then(async (book) => {
             await Room.findByIdAndUpdate(req.params.roomid, { $set: { status: false, user: userid } }, { new: true }).then(async () => {
                 await User.findByIdAndUpdate(userid, { $push: { booking: book._id } }, { new: true }).then(async () => {
-                    const hotel = await Hotel.findById(hotelid).populate({ path: "review", populate: { path: "user" } }).populate({ path: "rooms", populate: { path: "user" } }).populate("owner");
-                    res.status(200).json({ hotel })
+                    const booking= await Booking.findById(book._id).populate("hotel").populate("room").populate("user");
+                    res.status(200).json({ booking });
                 }).catch((error) => {
                     next(error);
                 })
